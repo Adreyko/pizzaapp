@@ -10,10 +10,11 @@ datasource db {
 model User {
     id Int @id @default(autoincrement())
 
-    email    String @unique
+    email    String  @unique
     fullName String
     password String
-    role     Role   @default(USER)
+    role     Role    @default(USER)
+    verified Boolean @default(false)
 
     provider   String?
     providerId String?
@@ -60,7 +61,7 @@ model ProductItem {
     quantity  Int
     price     Int
     size      Int?
-    pizzeType String?
+    pizzeType Int?
 
     product   Product @relation(fields: [productId], references: [id])
     productId Int

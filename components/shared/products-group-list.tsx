@@ -34,7 +34,7 @@ export const ProductsGroupList: React.FC<Props> = ({
     if (intersection?.isIntersecting) {
       setActiveId(categoryId);
     }
-  }, [intersection?.isIntersecting, categoryId, setActiveId]);
+  }, [intersection?.isIntersecting]);
 
   const filteredProducts = products.filter(
     (product) => product.items.length > 0
