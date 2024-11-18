@@ -1,14 +1,22 @@
+'use client';
 import React, { FC } from 'react';
 import { Title } from './title';
 import { FilterCheckbox } from './filter-checkbox';
 import { Input, RangeSlider } from '../ui';
 import { FilterCheckboxGroup } from './filter-checkbox-group';
+import { useFilterIngredients } from '@/app/hooks/useFilterIngredients';
 
 interface FiltersProps {
   className?: string;
 }
 
 export const Filters: FC<FiltersProps> = ({ className }) => {
+  const { ingredients, loading } = useFilterIngredients();
+
+  const items = ingredients.map((ingredient) => ({
+    text: ingredient.name,
+    value: String(ingredient.id),
+  }));
   return (
     <div className={className}>
       <Title text='Filters' size='sm' className='mb-5 font-bold' />
@@ -42,15 +50,9 @@ export const Filters: FC<FiltersProps> = ({ className }) => {
       <FilterCheckboxGroup
         title='Ingredients'
         className='mt-5'
-        defaultItems={[
-          { text: 'Category 1', value: '1' },
-          { text: 'Category 2', value: '2' },
-        ]}
-        items={[
-          { text: 'Category 1', value: '1' },
-          { text: 'Category 2', value: '2' },
-          { text: 'Category 3', value: '3' },
-        ]}
+        loading={loading}
+        defaultItems={items.slice(0, 3)}
+        items={items}
         limit={2}
       />
     </div>
