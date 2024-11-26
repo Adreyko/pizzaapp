@@ -11,7 +11,7 @@ interface FiltersProps {
 }
 
 export const Filters: FC<FiltersProps> = ({ className }) => {
-  const { ingredients, loading } = useFilterIngredients();
+  const { ingredients, loading, onAddId, selectedIds } = useFilterIngredients();
 
   const items = ingredients.map((ingredient) => ({
     text: ingredient.name,
@@ -50,10 +50,13 @@ export const Filters: FC<FiltersProps> = ({ className }) => {
       <FilterCheckboxGroup
         title='Ingredients'
         className='mt-5'
+        name='ingredients'
         loading={loading}
         defaultItems={items.slice(0, 3)}
         items={items}
         limit={2}
+        onClickCheckbox={onAddId}
+        selectedIds={selectedIds}
       />
     </div>
   );

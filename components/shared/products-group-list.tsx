@@ -9,6 +9,7 @@ import { useCategory } from '@/store/category';
 
 interface Props {
   title: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   products: any[];
   className?: string;
   listClassName?: string;
