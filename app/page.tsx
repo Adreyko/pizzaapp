@@ -5,19 +5,17 @@ import {
   Title,
   TopBar,
 } from '@/components/shared';
+import Ip from '@/components/shared/Ip';
 
 export default async function Home() {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const ip = fetch('https://api.ipify.org?format=json')
-    .then((response) => response.json())
-    .then((data) => console.log('Your IP is', data.ip))
-    .catch((error) => console.error('Error fetching user IP:', error));
+
   return (
     <>
       <Container className='mt-10'>
         <Title size='lg' text='All Pizzas' className='font-extrabold' />
       </Container>
-
+      <div>ip - {<Ip />}</div>
       <TopBar />
 
       <Container className='pb-14 mt-10'>
