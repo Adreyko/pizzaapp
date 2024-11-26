@@ -1,50 +1,103 @@
 'use client';
-import React, { FC } from 'react';
+import { FC } from 'react';
 import { Title } from './title';
-import { FilterCheckbox } from './filter-checkbox';
 import { Input, RangeSlider } from '../ui';
 import { FilterCheckboxGroup } from './filter-checkbox-group';
 import { useFilterIngredients } from '@/app/hooks/useFilterIngredients';
+
+import useQueryFilters from '@/app/hooks/useQueryFilters';
+import { useFilters } from '@/app/hooks/useFilter';
 
 interface FiltersProps {
   className?: string;
 }
 
 export const Filters: FC<FiltersProps> = ({ className }) => {
-  const { ingredients, loading, onAddId, selectedIds } = useFilterIngredients();
+  const { ingredients, loading } = useFilterIngredients();
+
+  const filters = useFilters();
+
+  useQueryFilters(filters);
+
+  const { priceFrom, priceTo } = filters.prices;
+
+  const {
+    sizes,
+    pizzaTypes,
+    setPizzaTypes,
+    setPrices,
+    selectedIngredients,
+    setSelectedIngredients,
+    setSizes,
+  } = filters;
 
   const items = ingredients.map((ingredient) => ({
     text: ingredient.name,
     value: String(ingredient.id),
   }));
+
   return (
     <div className={className}>
       <Title text='Filters' size='sm' className='mb-5 font-bold' />
 
-      <div className='flex flex-col gap-4'>
-        <FilterCheckbox text='Can pick' value='1' />
-        <FilterCheckbox text='New products' value='2' />
-      </div>
+      <FilterCheckboxGroup
+        title='Types of Test'
+        name='pizzaTypes'
+        className='mb-5'
+        onClickCheckbox={setPizzaTypes}
+        selectedIds={pizzaTypes}
+        items={[
+          { text: 'Thin', value: '1' },
+          { text: 'Traditional', value: '2' },
+        ]}
+      />
+
+      <FilterCheckboxGroup
+        title='Sizes'
+        name='sizes'
+        className='mb-5'
+        onClickCheckbox={setSizes}
+        selectedIds={sizes}
+        items={[
+          { text: '20 sm', value: '20' },
+          { text: '30 sm', value: '30' },
+          { text: '40 sm', value: '40' },
+        ]}
+      />
 
       <div className='mt-5 border-y border-y-neutral-100 py-6 pb-7'>
         <p className='font-bold mb-3'>Price from and to:</p>
         <div className='flex gap-3 mb-5'>
           <Input
+            onChange={(e) =>
+              setPrices({ priceFrom: Number(e.target.value), priceTo })
+            }
+            value={priceFrom}
             type='number'
             placeholder='0'
             min={0}
             max={3000}
-            defaultValue={0}
           />
           <Input
+            onChange={(e) =>
+              setPrices({ priceFrom, priceTo: Number(e.target.value) })
+            }
+            value={priceTo}
             type='number'
             placeholder='3000'
             min={100}
             max={3000}
-            defaultValue={3000}
           />
         </div>
-        <RangeSlider min={0} max={3000} step={10} value={[0, 3000]} />
+        <RangeSlider
+          value={[priceFrom, priceTo]}
+          onValueChange={([priceFrom, priceTo]) =>
+            setPrices({ priceFrom, priceTo })
+          }
+          min={0}
+          max={3000}
+          step={10}
+        />
       </div>
 
       <FilterCheckboxGroup
@@ -55,8 +108,8 @@ export const Filters: FC<FiltersProps> = ({ className }) => {
         defaultItems={items.slice(0, 3)}
         items={items}
         limit={2}
-        onClickCheckbox={onAddId}
-        selectedIds={selectedIds}
+        onClickCheckbox={setSelectedIngredients}
+        selectedIds={selectedIngredients}
       />
     </div>
   );
